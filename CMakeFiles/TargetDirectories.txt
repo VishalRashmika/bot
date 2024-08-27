@@ -1,0 +1,3 @@
+/media/akira/__ Main Drive/MY-FILES/github/bot/CMakeFiles/rebuild_cache.dir
+/media/akira/__ Main Drive/MY-FILES/github/bot/CMakeFiles/edit_cache.dir
+/media/akira/__ Main Drive/MY-FILES/github/bot/CMakeFiles/telegramBot.dir
