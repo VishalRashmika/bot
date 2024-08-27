@@ -21,6 +21,19 @@ void createOneColumnKeyboard(const vector<string>& buttonStrings, ReplyKeyboardM
   }
 }
 
+void createKeyboard(const vector<vector<string>>& buttonLayout, ReplyKeyboardMarkup::Ptr& kb)
+{
+  for (size_t i = 0; i < buttonLayout.size(); ++i) {
+    vector<KeyboardButton::Ptr> row;
+    for (size_t j = 0; j < buttonLayout[i].size(); ++j) {
+      KeyboardButton::Ptr button(new KeyboardButton);
+      button->text = buttonLayout[i][j];
+      row.push_back(button);
+    }
+    kb->keyboard.push_back(row);
+  }
+}
+
 int main() {
     string token(getenv("TOKEN"));
     printf("Token: %s\n", token.c_str());
@@ -45,11 +58,25 @@ int main() {
     bot.getApi().setMyCommands(commands);
 
     // keyboards
+    // ReplyKeyboardMarkup::Ptr start_keyboard(new ReplyKeyboardMarkup);
+    // createOneColumnKeyboard({"/todo", "/reminders", "/<sample>"}, start_keyboard);
     ReplyKeyboardMarkup::Ptr start_keyboard(new ReplyKeyboardMarkup);
-    createOneColumnKeyboard({"/todo", "/reminders", "/<sample>"}, start_keyboard);
+    createKeyboard({
+      {"/todo"},
+      {"/reminders", "/delete"},
+      {"/sample", "Off"},
+      {"Back"},
+      {"Info", "About", "Map", "Etc"}
+    }, start_keyboard);
 
     ReplyKeyboardMarkup::Ptr todo_keyboard(new ReplyKeyboardMarkup);
-    createOneColumnKeyboard({"/list", "/add", "/delete"}, todo_keyboard);
+    createKeyboard({
+      {"/list"},
+      {"/add", "/delete"},
+      {"/reminders", "Off"},
+      {"Back"},
+      {"Info", "About", "Map", "Etc"}
+    }, todo_keyboard);
 
 
     vector<BotCommand::Ptr> vectCmd;
@@ -70,7 +97,20 @@ int main() {
     bot.getEvents().onCommand("todo", [&bot, &todo_keyboard](Message::Ptr message) {
         bot.getApi().sendMessage(message->chat->id, "todo executed", nullptr, nullptr, todo_keyboard);
     });
-
+    // /todo - /list
+    bot.getEvents().onCommand("list", [&bot](Message::Ptr message) {
+        bot.getApi().sendMessage(message->chat->id, "Executed <list>:");
+    });
+    // /todo - /add
+    bot.getEvents().onCommand("add", [&bot, &todo_keyboard](Message::Ptr message) {
+        string msg = "Executed <add>:";
+        bot.getApi().sendMessage(message->chat->id, msg);
+    // /todo - /delete
+    });    
+    bot.getEvents().onCommand("delete", [&bot, &todo_keyboard](Message::Ptr message) {
+        string msg = "Executed <delete>:";
+        bot.getApi().sendMessage(message->chat->id, msg);
+    });
 
 
 
