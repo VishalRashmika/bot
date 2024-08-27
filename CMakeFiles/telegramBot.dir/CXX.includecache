@@ -19,6 +19,8 @@ exception
 -
 string
 -
+vector
+-
 tgbot/tgbot.h
 -
 

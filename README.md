@@ -1,4 +1,4 @@
 # bot
 
 ## todo :
-    migrate to conversation
+    migrate to conversation (Conversation Maps)
