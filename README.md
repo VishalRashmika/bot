@@ -1,4 +1,2 @@
 # bot
-
-## todo :
-    migrate to conversation (Conversation Maps)
+A simple telegram bot using python
