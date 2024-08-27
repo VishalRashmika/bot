@@ -30,12 +30,12 @@ int main() {
     // bot commands
     vector<BotCommand::Ptr> commands;
     BotCommand::Ptr cmdArray(new BotCommand);
-    cmdArray->command = "todo";
-    cmdArray->description = "Todo list";
-    commands.push_back(cmdArray);
-    cmdArray = BotCommand::Ptr(new BotCommand);
     cmdArray->command = "start";
     cmdArray->description = "Start the bot";
+    commands.push_back(cmdArray);
+    cmdArray = BotCommand::Ptr(new BotCommand);
+    cmdArray->command = "todo";
+    cmdArray->description = "Todo list";
     commands.push_back(cmdArray);
     cmdArray = BotCommand::Ptr(new BotCommand);
     cmdArray->command = "reminders";
@@ -43,6 +43,14 @@ int main() {
     commands.push_back(cmdArray);
 
     bot.getApi().setMyCommands(commands);
+
+    // keyboards
+    ReplyKeyboardMarkup::Ptr start_keyboard(new ReplyKeyboardMarkup);
+    createOneColumnKeyboard({"/todo", "/reminders", "/<sample>"}, start_keyboard);
+
+    ReplyKeyboardMarkup::Ptr todo_keyboard(new ReplyKeyboardMarkup);
+    createOneColumnKeyboard({"/list", "/add", "/delete"}, todo_keyboard);
+
 
     vector<BotCommand::Ptr> vectCmd;
     vectCmd = bot.getApi().getMyCommands();
@@ -52,15 +60,19 @@ int main() {
     }
 
     // /start
-    bot.getEvents().onCommand("start", [&bot](Message::Ptr message) {
-        bot.getApi().sendMessage(message->chat->id, "Hi! Bot started");
-        // todo: display a keyboard for options
+    bot.getEvents().onCommand("start", [&bot, &start_keyboard](Message::Ptr message) {
+        bot.getApi().sendMessage(message->chat->id, "Hi!, Bot initilized...", nullptr, nullptr, start_keyboard);
     });
-    
+
+
+
     // /todo
-    bot.getEvents().onCommand("todo", [&bot](Message::Ptr message) {
-        bot.getApi().sendMessage(message->chat->id, "Executed todo:");
+    bot.getEvents().onCommand("todo", [&bot, &todo_keyboard](Message::Ptr message) {
+        bot.getApi().sendMessage(message->chat->id, "todo executed", nullptr, nullptr, todo_keyboard);
     });
+
+
+
 
     // /reminders
     bot.getEvents().onCommand("reminders", [&bot](Message::Ptr message) {
